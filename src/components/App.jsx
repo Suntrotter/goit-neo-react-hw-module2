@@ -7,17 +7,15 @@ import { useState, useEffect } from 'react';
 
 const App = () => {
   const [feedback, setFeedback] = useState(() => {
-    return {
-      good: Number(localStorage.getItem('good')) || 0,
-      neutral: Number(localStorage.getItem('neutral')) || 0,
-      bad: Number(localStorage.getItem('bad')) || 0
+    return JSON.parse(localStorage.getItem('feedback')) || {
+      good: 0,
+      neutral: 0,
+      bad: 0
     };
   });
 
   useEffect(() => {
-    localStorage.setItem('good', feedback.good);
-    localStorage.setItem('neutral', feedback.neutral);
-    localStorage.setItem('bad', feedback.bad);
+    localStorage.setItem('feedback', JSON.stringify(feedback));
   }, [feedback]);
 
   const handleClick = (type) => {
@@ -28,12 +26,13 @@ const App = () => {
   };
 
   const resetFeedback = () => {
-    setFeedback({
+    const resetState = {
       good: 0,
       neutral: 0,
       bad: 0
-    });
-    localStorage.clear();
+    };
+    setFeedback(resetState);
+    localStorage.setItem('feedback', JSON.stringify(resetState));
   };
 
   const totalFeedback = feedback.good + feedback.neutral + feedback.bad;
